@@ -5,7 +5,11 @@ import com.project.pagamentos.application.usecase.ProcessarRespostaPagamentoUseC
 import com.project.pagamentos.domain.dto.PagamentoRespostaDTO;
 import com.project.pagamentos.domain.entity.Pagamento;
 import com.project.pagamentos.domain.repository.PagamentoRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
+@Transactional
 public class ProcessarRespostaPagamentoAppService implements ProcessarRespostaPagamentoUseCase {
 
     private final PagamentoRepository pagamentoRepository;
