@@ -1,5 +1,6 @@
 package com.project.pagamentos.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.pagamentos.adapters.out.messaging.PagamentoProducer;
 import com.project.pagamentos.application.usecase.ProcessarPagamentoUseCase;
 import com.project.pagamentos.domain.dto.PagamentoDTO;
@@ -30,39 +31,30 @@ public class ProcessarPagamentoAppService implements ProcessarPagamentoUseCase {
     }
 
     @Override
-    public void executar(ProcessarPagamentoDTO processarPagamentoDTO) {
+    public void executar(ProcessarPagamentoDTO processarPagamentoDTO) throws JsonProcessingException {
         UUID idPagamento = UUID.randomUUID();
-
-        PagamentoDTO pagamentoDTO = new PagamentoDTO(
-                idPagamento,
-                processarPagamentoDTO.contaId(),
-                LocalDateTime.now(),
-                null,
-                processarPagamentoDTO.valor(),
-                StatusPagamentoEnum.PENDENTE,
-                null);
 
         ProcessarPagamentoAppService.logger.info("Iniciando processamento do pagamento: {}", idPagamento);
 
-        this.persistirPagamento(pagamentoDTO);
+        PagamentoDTO pagamentoDTO = this.persistirPagamento(processarPagamentoDTO);
         this.enviarParaFila(pagamentoDTO);
     }
 
-    private void persistirPagamento(PagamentoDTO pagamentoDTO ) {
+    private PagamentoDTO persistirPagamento(ProcessarPagamentoDTO processarPagamentoDTO) {
         Pagamento pagamento = new Pagamento();
-
-        pagamento.setId(pagamentoDTO.id());
-        pagamento.setContaId(pagamentoDTO.contaId());
-        pagamento.setDataCriacao(pagamentoDTO.dataCriacao());
-        pagamento.setDataProcessamento(pagamentoDTO.dataProcessamento());
-        pagamento.setValor(pagamentoDTO.valor());
-        pagamento.setStatus(pagamentoDTO.status());
-        pagamento.setMotivoRecusa(pagamentoDTO.motivoRecusa());
+        pagamento.setContaId(processarPagamentoDTO.contaId());
+        pagamento.setDataCriacao(LocalDateTime.now());
+        pagamento.setDataProcessamento(null);
+        pagamento.setValor(processarPagamentoDTO.valor());
+        pagamento.setStatus(StatusPagamentoEnum.PENDENTE);
+        pagamento.setMotivoRecusa(null);
 
         this.pagamentoRepository.save(pagamento);
+
+        return PagamentoDTO.fromEntity(pagamento);
     }
 
-    private void enviarParaFila(PagamentoDTO pagamentoDTO) {
+    private void enviarParaFila(PagamentoDTO pagamentoDTO) throws JsonProcessingException {
         this.pagamentoProducer.enviarPagamento(pagamentoDTO);
         logger.info("Pagamento enviado para RabbitMQ: {}", pagamentoDTO.id());
     }

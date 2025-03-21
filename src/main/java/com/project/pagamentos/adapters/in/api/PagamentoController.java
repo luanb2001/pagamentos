@@ -1,5 +1,6 @@
 package com.project.pagamentos.adapters.in.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.pagamentos.application.usecase.ProcessarPagamentoUseCase;
 import com.project.pagamentos.domain.dto.ProcessarPagamentoDTO;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,11 @@ public class PagamentoController {
 
     @PostMapping
     public ResponseEntity<Boolean> processarPagamento(@RequestBody ProcessarPagamentoDTO processarPagamentoDTO) {
-        this.processarPagamentoUseCase.executar(processarPagamentoDTO);
+        try {
+            this.processarPagamentoUseCase.executar(processarPagamentoDTO);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.ok(true);
     }
 }

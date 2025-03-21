@@ -18,8 +18,7 @@ public class BuscarPagamentoPorIdUseCaseAppService implements BuscarPagamentoPor
     }
 
     @Override
-    public Pagamento executar(UUID pagamentoId) {
-        Optional<Pagamento> pagamento = this.pagamentoRepository.findById(pagamentoId);
-        return null;
+    public Optional<Pagamento> executar(UUID pagamentoId) {
+        return this.pagamentoRepository.findById(pagamentoId);
     }
 }
