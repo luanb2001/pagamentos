@@ -9,11 +9,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class BuscarPagamentoPorIdUseCaseAppService implements BuscarPagamentoPorIdUseCase {
+public class BuscarPagamentoPorIdAppService implements BuscarPagamentoPorIdUseCase {
 
     private final PagamentoRepository pagamentoRepository;
 
-    public BuscarPagamentoPorIdUseCaseAppService(PagamentoRepository pagamentoRepository) {
+    public BuscarPagamentoPorIdAppService(PagamentoRepository pagamentoRepository) {
         this.pagamentoRepository = pagamentoRepository;
     }
 

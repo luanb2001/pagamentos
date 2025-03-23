@@ -1,6 +1,5 @@
 package com.project.pagamentos.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.pagamentos.adapters.out.messaging.PagamentoProducer;
 import com.project.pagamentos.application.usecase.ProcessarPagamentoUseCase;
 import com.project.pagamentos.domain.dto.PagamentoDTO;
@@ -31,7 +30,7 @@ public class ProcessarPagamentoAppService implements ProcessarPagamentoUseCase {
     }
 
     @Override
-    public void executar(ProcessarPagamentoDTO processarPagamentoDTO) throws JsonProcessingException {
+    public void executar(ProcessarPagamentoDTO processarPagamentoDTO) {
         UUID idPagamento = UUID.randomUUID();
 
         ProcessarPagamentoAppService.logger.info("Iniciando processamento do pagamento: {}", idPagamento);
@@ -54,7 +53,7 @@ public class ProcessarPagamentoAppService implements ProcessarPagamentoUseCase {
         return PagamentoDTO.fromEntity(pagamento);
     }
 
-    private void enviarParaFila(PagamentoDTO pagamentoDTO) throws JsonProcessingException {
+    private void enviarParaFila(PagamentoDTO pagamentoDTO) {
         this.pagamentoProducer.enviarPagamento(pagamentoDTO);
         logger.info("Pagamento enviado para RabbitMQ: {}", pagamentoDTO.id());
     }

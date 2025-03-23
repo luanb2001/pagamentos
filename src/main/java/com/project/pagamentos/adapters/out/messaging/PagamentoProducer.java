@@ -2,6 +2,7 @@ package com.project.pagamentos.adapters.out.messaging;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.project.pagamentos.domain.dto.PagamentoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,16 +25,23 @@ public class PagamentoProducer {
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         this.objectMapper = objectMapper;
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
-    public void enviarPagamento(PagamentoDTO pagamentoDTO) throws JsonProcessingException {
-        String pagamentoJson = objectMapper.writeValueAsString(pagamentoDTO);
+    public void enviarPagamento(PagamentoDTO pagamentoDTO) {
+        String pagamentoJson;
+        try {
+            pagamentoJson = this.objectMapper.writeValueAsString(pagamentoDTO);
+        } catch (JsonProcessingException e) {
+            PagamentoProducer.logger.info("Não foi possível realizar o envio do pagamento: ", e.getMessage());
+            return;
+        }
 
         Message message = MessageBuilder.withBody(pagamentoJson.getBytes())
                 .setContentType("application/json")
                 .build();
 
-        PagamentoProducer.logger.info("📤 Enviando pagamento para RabbitMQ: {}", pagamentoDTO.id());
+        PagamentoProducer.logger.info("Enviando pagamento para RabbitMQ: {}", pagamentoDTO.id());
         this.rabbitTemplate.convertAndSend(PAGAMENTO_QUEUE, message);
     }
 }
