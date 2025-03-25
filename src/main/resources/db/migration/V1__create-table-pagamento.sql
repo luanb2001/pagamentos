@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS pagamento (
     id UUID NOT NULL,
-    conta_id UUID NOT NULL,  -- Corrigido aqui
+    conta_id UUID NOT NULL,
     data_criacao TIMESTAMP,
     data_processamento TIMESTAMP,
     valor DECIMAL(10,2) NOT NULL,
