@@ -1,18 +1,4 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/Pagamentos
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-
   postgres:
     image: postgres:14-alpine
     ports:
@@ -23,18 +9,6 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
       - POSTGRES_DB=Pagamentos
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U root -d Pagamentos" ]
-      interval: 10s
-      retries: 5
-      start_period: 10s
-
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - "5673:5672"
-      - "15673:15672"
-
 
 volumes:
   postgres-data:

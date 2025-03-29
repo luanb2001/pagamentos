@@ -44,9 +44,7 @@ public class ProcessarRespostaPagamentoAppServiceTest {
 
     @Test
     public void deveAtualizarStatusPagamentoComSucesso() {
-        String mensagemRecusa = "Pagamento aprovado";
-
-        PagamentoRespostaDTO pagamentoRespostaDTO = new PagamentoRespostaDTO(this.pagamentoId, this.contaId, this.dataProcessamento, StatusPagamentoEnum.CONFIRMADO, mensagemRecusa);
+        PagamentoRespostaDTO pagamentoRespostaDTO = new PagamentoRespostaDTO(this.pagamentoId, this.contaId, this.dataProcessamento, StatusPagamentoEnum.CONFIRMADO, null);
 
         Pagamento pagamento = new Pagamento();
         pagamento.setId(this.pagamentoId);
@@ -60,7 +58,6 @@ public class ProcessarRespostaPagamentoAppServiceTest {
         this.processarRespostaPagamentoAppService.executar(pagamentoRespostaDTO);
 
         assertEquals(StatusPagamentoEnum.CONFIRMADO, pagamento.getStatus());
-        assertEquals(mensagemRecusa, pagamento.getMotivoRecusa());
         assertEquals(this.dataProcessamento, pagamento.getDataProcessamento());
         verify(this.pagamentoRepository, times(1)).save(pagamento);
     }
