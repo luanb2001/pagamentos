@@ -16,7 +16,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"contaId\": \"da6efa7e-33bb-4b4e-adac-a7e90d525c7e\",\n    \"valor\": 10.5\n}",
+					"raw": "{\n    \"contaId\": \"5d3e41e3-1c62-4241-a334-1dbf99c591c1\",\n    \"valor\": 10.5\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -32,6 +32,55 @@
 					"port": "8081",
 					"path": [
 						"pagamento"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar pagamentos por filtro",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dataVencimento\": \"2024-06-03T12:30:45\",\n    \"descricao\": \"Conta de faculdade\",\n    \"situacaoContaEnum\": \"ABERTA\",\n    \"valor\": 10.5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/pagamento/listar-pagamentos?data-criacao-inicial=2025-03-01T12:30:45&data-criacao-final=2025-09-30T12:30:45&status-pagamento=CONFIRMADO",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"pagamento",
+						"listar-pagamentos"
+					],
+					"query": [
+						{
+							"key": "data-criacao-inicial",
+							"value": "2025-03-01T12:30:45"
+						},
+						{
+							"key": "data-criacao-final",
+							"value": "2025-09-30T12:30:45"
+						},
+						{
+							"key": "status-pagamento",
+							"value": "CONFIRMADO"
+						}
 					]
 				}
 			},
