@@ -1,5 +1,7 @@
 package com.project.pagamentos.domain.entity;
 
+import com.project.pagamentos.domain.dto.PagamentoRespostaDTO;
+import com.project.pagamentos.domain.dto.ProcessarPagamentoDTO;
 import com.project.pagamentos.domain.enums.StatusPagamentoEnum;
 import jakarta.persistence.*;
 
@@ -26,6 +28,27 @@ public class Pagamento {
     private StatusPagamentoEnum status;
 
     private String motivoRecusa;
+
+    public static Pagamento cadastrarPagamento(ProcessarPagamentoDTO processarPagamentoDTO) {
+        Pagamento pagamento = new Pagamento();
+        pagamento.setContaId(processarPagamentoDTO.contaId());
+        pagamento.setDataCriacao(LocalDateTime.now());
+        pagamento.setValor(processarPagamentoDTO.valor());
+        pagamento.setStatus(StatusPagamentoEnum.PENDENTE);
+
+        return pagamento;
+    }
+
+    public static Pagamento atualizarPagamento(Pagamento pagamento, PagamentoRespostaDTO pagamentoRespostaDTO) {
+        pagamento.setDataProcessamento(pagamentoRespostaDTO.dataProcessamento());
+        pagamento.setStatus(pagamentoRespostaDTO.status());
+
+        if (!StatusPagamentoEnum.CONFIRMADO.equals(pagamentoRespostaDTO.status())) {
+            pagamento.setMotivoRecusa(pagamentoRespostaDTO.mensagem());
+        }
+
+        return pagamento;
+    }
 
     public UUID getId() {
         return id;
