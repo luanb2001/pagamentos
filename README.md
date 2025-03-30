@@ -1,7 +1,7 @@
 # Pagamentos API
 
 ## OBSERVAÇÃO
- - É OBRIGATÓRIO "rodar" o projeto de Contas junto deste para o funcionamento correto
+ - É OBRIGATÓRIO rodar o projeto de Contas junto deste para o funcionamento correto
  - PROJETO CONTAS - https://github.com/luanb2001/contas
 
 ## ANOTAÇÕES
